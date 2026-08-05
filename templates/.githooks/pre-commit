@@ -1,0 +1,43 @@
+#!/bin/sh
+# pre-commit 게이트 — ① 거버넌스 검사(구조 위반은 차단) ② 린트(자동수정 후 통과, 못 고치는 것만 차단)
+# 활성화: git config core.hooksPath .githooks (MEMBER-BOOTSTRAP STEP ④)
+
+# ── 거버넌스 검사 (리포당 1거버넌스·컨벤션 단일 인덱스) ──
+ADDED=$(git diff --cached --name-only --diff-filter=A || true)
+
+# ⓐ 새 CLAUDE.md 화이트리스트 — 허용 위치: 루트 CLAUDE.md · 등록된 서브({{SUB_CLAUDE_MD}}) · 킷 템플릿 골격
+NEW_CLAUDE=$(printf '%s\n' "$ADDED" | grep -E '(^|/)CLAUDE\.md$' | grep -vE '^(CLAUDE\.md|{{SUB_CLAUDE_MD_REGEX}}|\.claude-starter-kit/templates/CLAUDE\.md)$' || true)
+if [ -n "$NEW_CLAUDE" ]; then
+  echo "[pre-commit] 차단: 화이트리스트 외 CLAUDE.md 신설 — $NEW_CLAUDE" >&2
+  echo "  서브 CLAUDE.md 신설·개정은 PR로 제안한다 (문서 거버넌스)" >&2
+  exit 1
+fi
+
+# ⓑ 컨벤션 체계 밖 문서 — 서브 프로젝트 doc/·docs/ 하위 md 신설 차단
+#    허용: 루트 docs/
+STRAY_DOC=$(printf '%s\n' "$ADDED" | grep -E '(^|/)docs?/.*\.md$' | grep -vE '^docs/|^\.claude-starter-kit/templates/docs/' || true)
+if [ -n "$STRAY_DOC" ]; then
+  echo "[pre-commit] 차단: 컨벤션 체계 밖 문서 신설 — $STRAY_DOC" >&2
+  echo "  규약·가이드 문서는 리포 루트 docs/ 아래에 둔다 (컨벤션은 docs/conventions/ + INDEX.md 등록)" >&2
+  exit 1
+fi
+
+# ⓒ docs/conventions/ 신규 문서는 같은 커밋에서 INDEX.md 등록 필수 (고립 문서 금지)
+NEW_CONV=$(printf '%s\n' "$ADDED" | grep -E '^docs/conventions/.*\.md$' | grep -v 'INDEX\.md' || true)
+if [ -n "$NEW_CONV" ]; then
+  if ! git diff --cached --name-only | grep -q '^docs/conventions/INDEX\.md$'; then
+    echo "[pre-commit] 차단: 컨벤션 신설에 INDEX.md 등록 누락 — $NEW_CONV" >&2
+    echo "  docs/conventions/INDEX.md 를 같은 커밋에서 갱신한다 (고립 문서 금지)" >&2
+    exit 1
+  fi
+fi
+
+# ── 린트 게이트 (자동수정 후 통과 — 스택 기준 치환) ──
+STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep -E '{{STAGED_SRC_REGEX}}' || true)
+if [ -n "$STAGED" ]; then
+  {{LINT_FIX_BLOCK}}
+  # 자동수정된 내용 재스테이징
+  git add $STAGED
+fi
+
+exit 0

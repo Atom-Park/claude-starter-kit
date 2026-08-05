@@ -1,0 +1,79 @@
+{
+  "permissions": {
+    "defaultMode": "default",
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash({{PKG_MGR}} lint:*)",
+      "Bash({{PKG_MGR}} build:*)",
+      "Bash({{PKG_MGR}} install:*)"
+    ],
+    "ask": [
+      "Edit(./CLAUDE.md)",
+      "Edit(./{{SUB_CLAUDE_MD}})",
+      "Edit(./docs/constitution.md)",
+      "Edit(./docs/conventions/**)",
+      "Edit(./.claude-starter-kit/**)",
+      "Edit(./.claude/rules/**)",
+      "Edit(./.claude/skills/**)",
+      "Edit(./.githooks/**)",
+      "Edit(./.github/pull_request_template.md)",
+      "Edit(./MEMBER-BOOTSTRAP.md)",
+      "Edit(./.claude/settings.json)"
+    ],
+    "deny": [
+      "Edit(./.claude-starter-kit/templates/**)",
+      "Bash(git commit --no-verify:*)",
+      "Bash(git push --force:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh .githooks/session-bootstrap.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh .githooks/list-personal-assets.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh .githooks/guard-governance.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh .githooks/format-on-edit.sh"
+          },
+          {
+            "type": "command",
+            "command": "sh .githooks/notify-unattended-edit.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

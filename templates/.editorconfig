@@ -1,0 +1,10 @@
+root = true
+
+# 생성 안내(배치 후 이 두 줄은 지운다): 아래 스택 블록의 글롭에 md 를 넣지 않는다 — 하단 [*.md] 절과 겹친다
+{{EDITORCONFIG_STACK_BLOCK}}
+
+[*.md]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = false

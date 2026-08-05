@@ -1,0 +1,10 @@
+### 개인층 (③ — 커밋 금지 영역) ###
+.claude/settings.local.json
+.claude/unattended-edits.log
+CLAUDE.local.md
+docs/personal/*
+!docs/personal/README.md
+.superpowers/
+docs/superpowers/
+
+{{GITIGNORE_STACK_BLOCK}}
