@@ -1,6 +1,8 @@
 {
   "name": "claude-starter-kit",
   "description": "리포에 Claude 협업 표준 구조를 생성하는 도구 — 질문에 답하면 허브·컨벤션·검증 장치·온보딩이 한 번에 만들어진다.",
-  "version": "0.1.0",
-  "author": { "name": "Atom-Park" }
+  "version": "0.2.0",
+  "author": {
+    "name": "Atom-Park"
+  }
 }
