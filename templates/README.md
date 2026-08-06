@@ -31,6 +31,7 @@
 | `.githooks/list-personal-assets.sh` | 동일 | SessionStart — docs/personal 목록 주입(불변) |
 | `.claude/settings.json` | 동일 | defaultMode·보호 경로 ask(Edit 폼)·deny·훅 등록 골격 |
 | `.claude/rules/doc-governance.md` | 동일 | 무조건 로드 규칙(문서 거버넌스 집행 요약) |
+| `.claude/rules/_stack.md` | `.claude/rules/<스택 슬러그>.md` | **스택마다 1부** — 스택 컨벤션 집행 요약(`paths` 범위 로드). 슬러그는 위 컨벤션 문서와 일치 |
 | `.claude/skills/change-propagation/SKILL.md` | 동일 | 절차층 — 규칙·값 변경 전파 6단계(호출 시 로드) |
 | `.claude/skills/commit-and-pr/SKILL.md` | 동일 | 절차층 — 커밋·PR 실행 절차(호출 시 로드) |
 | `.github/pull_request_template.md` | 동일 | PR 본문 골격 |
@@ -38,6 +39,9 @@
 | `.gitignore` | 리포 루트 | 개인층 경로 고정 7행 + 스택 블록 치환 |
 | `docs/constitution.md` | 동일 | 헌법 골격 — 머리말·게이트 문구 고정, 원칙만 치환 |
 | `docs/conventions/INDEX.md` | 동일 | **컨벤션 단일 인덱스 — 이름·위치 고정**(게이트가 이 경로를 검사) |
+| `docs/conventions/git.md` | 동일 | 커밋·브랜치·게이트·PR 규약 정본 — **type 표 11종 고정**, scope·브랜치·게이트만 치환 |
+| `docs/conventions/code-style.md` | 동일 | 전역 작성 규칙 — 언어·이름·문서·인코딩·주석 |
+| `docs/conventions/_stack.md` | `docs/conventions/<스택 슬러그>.md` | **스택마다 1부** — 검증된 조합·도구 체인·린터·타입 검사·테스트·구조 |
 | `docs/personal/README.md` | 동일 | 개인 자산 폴더 안내(이 폴더에서 유일한 커밋 파일) |
 | `docs/concepts/glossary.md` | 동일 | 용어 사전 — 공통 구조·장치 용어 고정, 리포 고유 행만 치환 |
 | `docs/designs/.gitkeep` | 동일 | 폴더 존재 보장 |
@@ -69,9 +73,32 @@
 | `{{REPO_PITFALLS}}` | 전파 시 이 리포에서 놓치기 쉬운 것 — 없으면 줄 제거, 실행하며 축적 | — |
 | `{{ISSUE_SOURCE}}` | 이슈번호 소스 — 없으면 스킬의 0단계 절과 **PR 템플릿의 `관련 이슈` 절·제목 형식의 `[#<이슈번호>]`** 를 함께 제거 | `노션 PM Task DB "<DB명>"` |
 | `{{ISSUE_SNAPSHOT}}` | 이슈 목록 스냅샷 문서의 경로·성격 — 관리자가 Q9로 자료를 준 경우에만 존재한다. 없으면 `{{ISSUE_SOURCE}}`와 함께 0단계 절을 통째로 제거 | `` `docs/conventions/issues.md`(정적 스냅샷) `` |
-| `{{TYPE_SCOPE}}` | git.md의 type·scope 표 지시 문구 | `type 표(8종)·scope 표` |
+| `{{TYPE_SCOPE}}` | 스킬이 git.md를 가리키는 포인터 문구. **type 표는 골격 고정(11종)이라 치환 대상이 아니다** — scope 쪽만 리포값으로 쓴다 | **[기본]** `type 표(표준 11종)·scope 표` |
+| `{{STACK_LABEL}}` | 스택 표시명 (짧게) | `FE` · `BE` |
+| `{{STACK_TITLE}}` | 스택 구성 한 줄 | `React + TypeScript + Vite` |
+| `{{STACK_SLUG}}` | 스택 슬러그 — **`docs/conventions/<슬러그>.md` 와 `.claude/rules/<슬러그>.md` 에 같은 값**을 쓴다 | `frontend` · `backend` |
+| `{{STACK_PATHS}}` | 소스 경로(산문 표기). 트리가 여럿이면 모두 적는다 | `` `src/**` `` |
+| `{{STACK_PATHS_YAML}}` | 같은 값의 YAML 리스트 행(2칸 들여쓰기 `- ` 형식) | `  - src/**` |
+| `{{STACK_VERSION_ROWS}}` | "검증된 조합" 표의 행 — **실측값**(런타임·언어·프레임워크·린터·포매터·테스트) | — |
+| `{{STACK_COMMAND_ROWS}}` | 도구 체인 표의 행 (설치·빌드·검증 등 목적별) | — |
+| `{{STACK_VERSION_PIN}}` | 런타임·언어 버전 고정 수단 (§4-S 구조표) | `` `.nvmrc` `` · `` `.python-version` `` |
+| `{{LINTER}}`·`{{FORMATTER}}`·`{{LINE_LENGTH}}` | §4-S 도구표 값 | `ruff check` · `ruff format` · `88` |
+| `{{LINT_EXIT_NOTE}}` | 린터 종료코드 기준 **실측 결과**와 대응 (§0-6 실측 예 ②) | 위반 시 비영 종료 — 추가 옵션 불필요 |
+| `{{TYPE_CHECK_BLOCK}}` | 타입 검사 절 본문. 컴파일러 검사 스택은 명령만, 별도 도구 스택은 도구·설정·명령. 해당 없으면 절째 삭제 | — |
+| `{{TEST_FRAMEWORK}}`·`{{TEST_LAYOUT}}`·`{{TEST_CMD}}` | §4-S 값 — **배치 규약은 스택 관례를 따른다**(소스 옆 / 별도 트리) | `pytest` · 별도 `tests/` · `uv run pytest` |
+| `{{STACK_LAYOUT_BLOCK}}` | 소스 구조 절 본문 — 그 스택의 표준 디렉토리 배치. **한 트리로 가정하지 않는다** | — |
+| `{{STACK_LAYOUT_SUMMARY}}` | 같은 내용 한 줄 요약(규칙 파일용) | `` `src/main/java/**` 와 `src/test/java/**` 로 갈린다 `` |
+| `{{STACK_VERIFY_CMDS}}` | 그 스택의 검증 명령. 리포 전체값 `{{VERIFY_CMDS}}` 와 **다를 수 있다**(다스택 리포는 스택별로 갈린다). 설치·빌드 명령은 `{{STACK_COMMAND_ROWS}}` 가 갖는다 | `` `uv run ruff check .` · `uv run pytest` `` |
+| `{{STACK_DOC_LINKS}}` | code-style.md 머리말의 스택 문서 링크 나열 | `[frontend.md](frontend.md) · [backend.md](backend.md)` |
+| `{{INDENT_SUMMARY}}` | 들여쓰기 규약 한 줄 (스택별로 다르면 함께) | 들여쓰기 2칸(Python은 4칸) |
+| `{{SECTION_COMMENT}}` | 구역 주석 형태 (스택 주석 문법) | `// ── 구역 이름 ──` |
+| `{{GEN_DATE}}` | 생성 날짜 (실측 표 머리) | `2026-08-06` |
+| `{{SCOPE_ROWS}}` | git.md scope 표의 행. 소스 트리 최상위 구획 + 설정·문서 | `` | 모듈 | `core` `ui` | 각 모듈명 | `` |
+| `{{SCOPE_EXAMPLE}}` | 커밋 예시에 쓸 scope 값 하나 — `{{SCOPE_ROWS}}`에 실제로 있는 값이어야 한다 | `ui` |
+| `{{BRANCH_ROWS}}` | git.md 브랜치 표의 행. 보호 브랜치와 작업 브랜치를 모두 적는다 | `` | `main` | 기준 브랜치 — PR로만 갱신 | `` |
+| `{{GATE_SUMMARY}}` | 커밋 게이트가 무엇을 자동수정하고 무엇을 차단하는지 한 줄. `{{LINT_FIX_BLOCK}}`으로 실제 배치한 내용과 **도구명·차단 조건이 일치**해야 한다 | 스테이징된 `src/**` 에 oxlint `--fix` 를 적용해 재스테이징하고, 자동수정 불가 위반만 차단한다 |
 | `{{PR_SECTIONS}}` | PR 템플릿이 요구하는 절 나열 — 실제 배치한 PR 템플릿의 절과 일치시킨다(이슈 추적이 없어 `관련 이슈`를 지웠으면 여기서도 뺀다) | `관련 이슈 · 주요 변경사항` |
-| `{{MERGE_COND}}` | 머지 조건 | `검증 통과 + 승인 1` |
+| `{{MERGE_COND}}` | 머지 조건 — 묻는 질문이 없으므로 기본값을 쓰고 지도표에 † 로 등재한다(리포 호스팅 설정으로 확정될 때 갱신) | **[기본]** `검증 통과 + 승인 1` |
 | `{{CONSTITUTION_PRINCIPLES}}` | constitution 원칙 3~5개 번호 목록 (Q8) | `1. 모든 산출물 문서는 한국어로 작성한다.` |
 | `{{REPO_WORK_RULES}}` | 리포 고유 작업 규약 — 골격 5항 다음부터 이어 붙인다(6·7…). 없으면 행 제거. **판을 올려 재생성할 때 리포 고유 규약이 유실되지 않게 하는 자리** | — |
 | `{{REPO_DONTS}}` | 리포 고유 '하지 말 것' 불릿 — 없으면 행 제거. 위와 같은 이유로 유지한다 | — |
