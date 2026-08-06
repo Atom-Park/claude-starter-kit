@@ -24,7 +24,6 @@
       "Edit(./.claude/settings.json)"
     ],
     "deny": [
-      "Edit(./.claude-starter-kit/templates/**)",
       "Bash(git commit --no-verify:*)",
       "Bash(git push --force:*)"
     ]

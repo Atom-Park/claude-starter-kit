@@ -6,7 +6,7 @@
 ADDED=$(git diff --cached --name-only --diff-filter=A || true)
 
 # ⓐ 새 CLAUDE.md 화이트리스트 — 허용 위치: 루트 CLAUDE.md · 등록된 서브({{SUB_CLAUDE_MD}}) · 킷 템플릿 골격
-NEW_CLAUDE=$(printf '%s\n' "$ADDED" | grep -E '(^|/)CLAUDE\.md$' | grep -vE '^(CLAUDE\.md|{{SUB_CLAUDE_MD_REGEX}}|\.claude-starter-kit/templates/CLAUDE\.md)$' || true)
+NEW_CLAUDE=$(printf '%s\n' "$ADDED" | grep -E '(^|/)CLAUDE\.md$' | grep -vE '^(CLAUDE\.md|{{SUB_CLAUDE_MD_REGEX}})$' || true)
 if [ -n "$NEW_CLAUDE" ]; then
   echo "[pre-commit] 차단: 화이트리스트 외 CLAUDE.md 신설 — $NEW_CLAUDE" >&2
   echo "  서브 CLAUDE.md 신설·개정은 PR로 제안한다 (문서 거버넌스)" >&2
@@ -15,7 +15,7 @@ fi
 
 # ⓑ 컨벤션 체계 밖 문서 — 서브 프로젝트 doc/·docs/ 하위 md 신설 차단
 #    허용: 루트 docs/
-STRAY_DOC=$(printf '%s\n' "$ADDED" | grep -E '(^|/)docs?/.*\.md$' | grep -vE '^docs/|^\.claude-starter-kit/templates/docs/' || true)
+STRAY_DOC=$(printf '%s\n' "$ADDED" | grep -E '(^|/)docs?/.*\.md$' | grep -vE '^docs/' || true)
 if [ -n "$STRAY_DOC" ]; then
   echo "[pre-commit] 차단: 컨벤션 체계 밖 문서 신설 — $STRAY_DOC" >&2
   echo "  규약·가이드 문서는 리포 루트 docs/ 아래에 둔다 (컨벤션은 docs/conventions/ + INDEX.md 등록)" >&2
