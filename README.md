@@ -101,6 +101,14 @@ claude plugin marketplace update atom-park
 claude plugin update claude-starter-kit@atom-park
 ```
 
+## 라이선스
+
+**사내 내부 도구다. All rights reserved.**
+
+열람 목적으로 공개돼 있을 뿐, 사외에서의 사용·수정·재배포를 허락하지 않는다. 사내 이용 문의는 저장소 소유자에게.
+
+> **Internal tool — all rights reserved.** This repository is public for reference only. No license is granted for use, modification, or redistribution outside the owning organization.
+
 ## 골격을 고칠 때
 
 `templates/` 의 문서는 **생성기에게 하는 지시와 산출물 내용이 섞이기 쉽다.** 생성기에게 하는 말은 반드시 다음 형식으로만 쓴다 — 그래야 배치 후 삭제 규칙에 걸린다.
