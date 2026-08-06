@@ -72,7 +72,7 @@
 | `{{PLUGIN_TABLE}}` | 플러그인 용도별 표 (Q3·Q6) — 열 `\| 플러그인 \| 무엇을 주나 \| 언제 도움이 되나 \|`. **배치처는 `docs/conventions/plugins.md` 한 곳**이고 그 문서가 정본이다. MEMBER-BOOTSTRAP 은 링크만 한다 — 표를 두 곳에 두지 않는다. 각 플러그인이 실제로 더하는 것(슬래시·스킬·MCP 도구)은 `claude plugin details <name>` 으로 실측해 적는다 | — |
 | `{{MAP_TABLE}}` | 이 리포의 지도표 파일명 (스킬) | `propagation-map-<리포>.md` |
 | `{{REPO_PITFALLS}}` | 전파 시 이 리포에서 놓치기 쉬운 것 — 없으면 줄 제거, 실행하며 축적 | — |
-| `{{ISSUE_SOURCE}}` | 이슈번호 소스 — 없으면 스킬의 0단계 절과 **PR 템플릿의 `관련 이슈` 절·제목 형식의 `[#<이슈번호>]`** 를 함께 제거 | `노션 PM Task DB "<DB명>"` |
+| `{{ISSUE_SOURCE}}` | 이슈번호 소스 — 없으면 스킬의 0단계 절과 **PR 템플릿의 `관련 이슈` 절·제목 형식의 `[#<이슈번호>]`** 를 함께 제거 | `이슈 트래커 DB "<DB명>"` |
 | `{{ISSUE_SNAPSHOT}}` | 이슈 목록 스냅샷 문서의 경로·성격 — 관리자가 Q9로 자료를 준 경우에만 존재한다. 없으면 `{{ISSUE_SOURCE}}`와 함께 0단계 절을 통째로 제거 | `` `docs/conventions/issues.md`(정적 스냅샷) `` |
 | `{{TYPE_SCOPE}}` | 스킬이 git.md를 가리키는 포인터 문구. **type 표는 골격 고정(11종)이라 치환 대상이 아니다** — scope 쪽만 리포값으로 쓴다 | **[기본]** `type 표(표준 11종)·scope 표` |
 | `{{STACK_LABEL}}` | 스택 표시명 (짧게) | `FE` · `BE` |
