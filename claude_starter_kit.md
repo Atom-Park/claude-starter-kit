@@ -131,7 +131,7 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
 - **〔신설〕 절차층 배치**: 스킬이 `.claude/skills/<절차>/SKILL.md` 로 존재하고 templates 원문과 치환부 외 일치 · 보호 경로 목록(settings ask·가드·사후 보고 훅·doc-governance)에 `.claude/skills/**` 등재 · 각 SKILL.md 200줄 이하 · 허브 문서 지도에서 링크됨
 - **〔신설〕 강제 장치 실측**: 보호 경로 ask 규칙(Edit 폼)·defaultMode가 settings에 존재 + 가드 차단 실측(화이트리스트 외 `CLAUDE.md` 생성 시도 → PreToolUse 차단 / 커밋 시도 → pre-commit 차단)
 - **〔신설〕 린트 게이트 차단 실측**: 자동수정 불가 위반을 만들어 스테이징하고 pre-commit이 `exit 1`로 차단하는지 확인한다. `exit 0`이면 게이트가 무력한 것이다 — 종료코드 옵션을 고쳐 다시 잰다
-- **〔신설〕 템플릿 원문 일치**: templates/ ↔ 배치본(훅·settings·rules·스킬·PR 템플릿) diff = 치환부 외 0건
+- **〔신설〕 템플릿 원문 일치**: templates/ ↔ 배치 결과(훅·settings·rules·스킬·PR 템플릿) diff = 치환부 외 0건
 - **생성 흔적 기록** — 지도표 머리말에 `생성: claude-starter-kit v<버전> (<날짜>)` 가 있다
 - **킷 층 최소** — `.claude-starter-kit/` 에 지도표 1파일만 있다(초안 사본·골격 없음)
 
@@ -154,7 +154,7 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
 > 생성: claude-starter-kit v<플러그인 버전> (<날짜>)
 > 대상 리포: <리포 이름>(이 리포) · † = 협의 중 항목(확정 시 1순위 일괄 반영). 경로는 리포 루트 기준.
 
-| 사실 | 현재 값 | ① 정본 (킷) | ② 배치본 (리포 문서) | ③ 실물 (생성 후) |
+| 사실 | 현재 값 | ① 참조층 (Claude가 읽는 것) | ② 집행층 (장치가 읽는 것) | ③ 실물 |
 |---|---|---|---|---|
 
 ## 리포 특이사항
@@ -162,7 +162,7 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
 ```
 
 - **최초 생성 — 시드 3종**으로 초기 행을 뽑는다:
-  1. **치환표 시드** — `templates/README.md` 치환표의 placeholder 전 행. placeholder = 킷이 스스로 선언한 "여러 곳에 퍼지는 사실"이므로 그대로 지도표 후보다. 각 placeholder의 현재 값으로 검색해 배치본·실물 위치를 채운다.
+  1. **치환표 시드** — `templates/README.md` 치환표의 placeholder 전 행. placeholder = 킷이 스스로 선언한 "여러 곳에 퍼지는 사실"이므로 그대로 지도표 후보다. 각 placeholder의 현재 값으로 검색해 참조층·집행층·실물 위치를 채운다.
   2. **협의 표시 시드** — 산출물에서 "협의 필요"·"협의 중"·"미확정" 표시가 붙은 항목. 가장 먼저 바뀔 값들이므로 † 를 달아 등재한다.
   3. **유형 체크리스트 시드** — 포트 · URL/경로 규약 · 패키지/네임스페이스 · 외부 의존성 좌표·버전 · 커밋/PR 규약 · 플러그인 목록 · 스택·버전 · 기동/테스트 명령 · **Claude 규칙 파일(rules ↔ conventions 짝)** · **스킬층** · 보호 경로 목록 · 기본 권한 모드(defaultMode)
 - **유지**: 전파 중 지도표에 없던 사실을 고쳤으면 행을 추가하고, 등재됐지만 실제와 다른 위치(문서 이동·삭제)를 발견하면 그 자리에서 바로잡는다. 유지비용은 실행에 내장 — 별도 관리 작업을 두지 않는다.
@@ -191,7 +191,7 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
   - **`.githooks/notify-unattended-edit.sh`** (templates 원문) — PostToolUse: 무인 모드 보호 경로 수정 검출 시 exit 2 피드백(최종 보고 명시·커밋 전 사용자 확인 의무)
   - **`.githooks/session-bootstrap.sh`** (templates 원문) — SessionStart(startup·clear): 킷 세션 식별·자가 점검(hooksPath) 주입, 예외 기반 문답 지시
   - **pre-commit 거버넌스 3검사** (templates 원문 + 스택 린트 게이트 치환) — ⓐ 새 CLAUDE.md 화이트리스트 검사 ⓑ 인덱스 밖 규약 문서 차단 ⓒ `docs/conventions/` 신규 파일 ↔ INDEX.md 동반 수정 검사
-  - **`.claude/skills/change-propagation/SKILL.md`·`.claude/skills/commit-and-pr/SKILL.md`** (templates 원문) — 절차층 기본 2종: 변경 전파(정본→배치본→실물 6단계 · 이 킷의 변경 규약 전부를 담는다)·커밋/PR 실행(`docs/conventions/git.md` 정본 대조 → 게이트 통과 → PR 템플릿 충족). 치환값은 지도표에 등재한다(`{{MAP_TABLE}}`·`{{REPO_PITFALLS}}`·`{{ISSUE_SOURCE}}`·`{{TYPE_SCOPE}}`·`{{PR_SECTIONS}}`·`{{MERGE_COND}}`) — 절차 문구를 다른 문서에 복제하지 않는다. **새 절차가 필요하면 문서를 늘리지 말고 스킬을 추가**하고 보호 경로·허브 문서 지도에 함께 등재한다
+  - **`.claude/skills/change-propagation/SKILL.md`·`.claude/skills/commit-and-pr/SKILL.md`** (templates 원문) — 절차층 기본 2종: 변경 전파(참조층→집행층→실물 6단계 · 이 킷의 변경 규약 전부를 담는다)·커밋/PR 실행(`docs/conventions/git.md` 정본 대조 → 게이트 통과 → PR 템플릿 충족). 치환값은 지도표에 등재한다(`{{MAP_TABLE}}`·`{{REPO_PITFALLS}}`·`{{ISSUE_SOURCE}}`·`{{TYPE_SCOPE}}`·`{{PR_SECTIONS}}`·`{{MERGE_COND}}`) — 절차 문구를 다른 문서에 복제하지 않는다. **새 절차가 필요하면 문서를 늘리지 말고 스킬을 추가**하고 보호 경로·허브 문서 지도에 함께 등재한다
   - **(Q10 "있음" 시)** CLAUDE.md 템플릿 첫 줄 `@AGENTS.md` 가져오기 구성
 - 스택별 생성 대상: ① **검증된 조합**(런타임·프레임워크·빌드·린터/포매터·테스트의 버전 표 — `docs/conventions/<스택>.md`에 두며 이 표가 스택 버전의 단일 출처) ② `docs/conventions/<스택>.md` ③ templates 치환자 값 — **린터·포매터 명령 치환자(`{{LINT_FIX_BLOCK}}`·`{{FORMAT_CMD}}`)는 바이너리가 해석되는 패키지 루트에서 실행하도록 채운다**(모노레포 루트에서 바로 부르면 조용히 무동작). 스테이징 경로는 리포 루트 기준이므로 접두를 제거해 넘긴다. **게이트가 실제로 차단하는지 종료코드로 확인하고**(§0-6 실측 예 ②), 통과해 버리면 경고를 오류로 올리는 옵션을 넣는다 — **커밋 게이트와 검증 명령(`{{VERIFY_CMDS}}`)의 종료코드 기준을 같게 맞춘다**: `{{PKG_MGR}}`·`{{STAGED_SRC_REGEX}}`·`{{LINT_FIX_BLOCK}}`·`{{FORMAT_CMD}}`·`{{DEP_INSTALL}}`·`{{VERIFY_CMDS}}`·`{{EDITORCONFIG_STACK_BLOCK}}`·`{{GITIGNORE_STACK_BLOCK}}`) + **〔신설〕 경로 범위 규칙 파일** — `.claude/rules/<스택>.md`. frontmatter 형식은 다음으로 고정한다:
     ```
