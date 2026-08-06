@@ -1,5 +1,5 @@
 ---
-description: 이 리포에 Claude 협업 표준 구조를 생성한다 (관리자·리포당 1회)
+description: Scaffold the Claude collaboration structure into this repository (admin, once per repo)
 ---
 
 현재 리포에 Claude 협업 표준 구조를 생성한다.

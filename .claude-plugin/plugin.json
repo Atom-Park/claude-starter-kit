@@ -1,7 +1,7 @@
 {
   "name": "claude-starter-kit",
-  "description": "리포에 Claude 협업 표준 구조를 생성하는 도구 — 질문에 답하면 허브·컨벤션·검증 장치·온보딩이 한 번에 만들어진다. 산출물 문서·주석은 한국어로 생성된다 (generates Korean-language documentation).",
-  "version": "0.3.1",
+  "description": "Scaffolds a complete Claude collaboration setup into a repository — hub, conventions, enforcement gates, and team onboarding — from a short Q&A. Generated documentation is in Korean.",
+  "version": "0.3.2",
   "author": {
     "name": "Atom-Park"
   }

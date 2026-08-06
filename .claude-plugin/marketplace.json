@@ -1,12 +1,14 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "atom-park",
-  "description": "조직 내부 Claude Code 플러그인",
-  "owner": { "name": "Atom-Park" },
+  "description": "Internal Claude Code plugins",
+  "owner": {
+    "name": "Atom-Park"
+  },
   "plugins": [
     {
       "name": "claude-starter-kit",
-      "description": "리포에 Claude 협업 표준 구조를 생성한다.",
+      "description": "Scaffolds a standard Claude collaboration structure into a repository. Korean-language output.",
       "category": "workflow",
       "source": "./"
     }
