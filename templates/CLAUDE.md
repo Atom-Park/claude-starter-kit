@@ -34,7 +34,7 @@
 - 팀원 개인 셋팅: [MEMBER-BOOTSTRAP.md](MEMBER-BOOTSTRAP.md) · 개인 참조 자산: [docs/personal/](docs/personal/README.md)(git 미추적)
 {{SUB_HUB_LINK}}
 - **스킬**: [.claude/skills/](.claude/skills/) — 절차는 스킬이 담당한다(호출 시에만 로드). 기본 `change-propagation`(규칙·값 변경 전파) · `commit-and-pr`(커밋·PR 실행). 새 절차는 문서에 산문으로 늘리지 말고 스킬로 만든다
-- `.claude-starter-kit/`는 **킷 층**(생성 규약 사본·`templates/` 생성 이력 스냅샷·지도표) — **평시에 열지 않는다.** 여는 시점은 둘뿐이다: 리포 생성 시(관리자), 그리고 셋팅을 바꿀 때 `change-propagation` 스킬이 **지도표**를 읽을 때. `templates/`는 봉인돼 편집이 차단된다.
+- `.claude-starter-kit/`에는 **변경 지도표 하나만** 있다 — `change-propagation` 스킬이 셋팅을 바꿀 때 읽는 사실 목록이다. 평소 개발에서 열 일은 없다. 생성 규약·골격은 리포에 없다(관리자 플러그인이 갖는다).
 
 ## 작업 규약
 
