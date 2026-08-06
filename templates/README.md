@@ -41,6 +41,7 @@
 | `docs/conventions/INDEX.md` | 동일 | **컨벤션 단일 인덱스 — 이름·위치 고정**(게이트가 이 경로를 검사) |
 | `docs/conventions/git.md` | 동일 | 커밋·브랜치·게이트·PR 규약 정본 — **type 표 11종 고정**, scope·브랜치·게이트만 치환 |
 | `docs/conventions/code-style.md` | 동일 | 전역 작성 규칙 — 언어·이름·문서·인코딩·주석 |
+| `docs/conventions/plugins.md` | 동일 | **플러그인·MCP 목록 정본** — MEMBER-BOOTSTRAP 이 링크한다 |
 | `docs/conventions/_stack.md` | `docs/conventions/<스택 슬러그>.md` | **스택마다 1부** — 검증된 조합·도구 체인·린터·타입 검사·테스트·구조 |
 | `docs/personal/README.md` | 동일 | 개인 자산 폴더 안내(이 폴더에서 유일한 커밋 파일) |
 | `docs/concepts/glossary.md` | 동일 | 용어 사전 — 공통 구조·장치 용어 고정, 리포 고유 행만 치환 |
@@ -68,7 +69,7 @@
 | `{{BOUNDARY_CHECK}}` | 수정 경계 **한 줄 점검 문구** — PR 체크박스·스킬 보고 항목용(예: `수정 경계 준수 — <경계 밖 영역> 변경 없음`). 경계 없으면 항목 제거 | — |
 | `{{BOUNDARY_DECL}}` | 수정 경계 **선언문** — 허브용, 여러 줄 가능(수정 대상/무접촉 영역을 나눠 적는다). 경계 없으면 절 자체를 제거 | — |
 | `{{DEP_INSTALL}}` | 의존성 설치 명령 나열 (스택 선택) | — |
-| `{{PLUGIN_TABLE}}` | 플러그인 용도별 표 (Q3·Q6). **이 표가 플러그인 목록의 정본**이다 — 별도 문서를 만들지 않는다. 표 아래에 "이 표가 정본 — 변경은 PR로" 한 줄과 설치 방법을 함께 적는다 | 이름 / 무엇을 주나 / 언제 도움이 되나 |
+| `{{PLUGIN_TABLE}}` | 플러그인 용도별 표 (Q3·Q6) — 열 `\| 플러그인 \| 무엇을 주나 \| 언제 도움이 되나 \|`. **배치처는 `docs/conventions/plugins.md` 한 곳**이고 그 문서가 정본이다. MEMBER-BOOTSTRAP 은 링크만 한다 — 표를 두 곳에 두지 않는다. 각 플러그인이 실제로 더하는 것(슬래시·스킬·MCP 도구)은 `claude plugin details <name>` 으로 실측해 적는다 | — |
 | `{{MAP_TABLE}}` | 이 리포의 지도표 파일명 (스킬) | `propagation-map-<리포>.md` |
 | `{{REPO_PITFALLS}}` | 전파 시 이 리포에서 놓치기 쉬운 것 — 없으면 줄 제거, 실행하며 축적 | — |
 | `{{ISSUE_SOURCE}}` | 이슈번호 소스 — 없으면 스킬의 0단계 절과 **PR 템플릿의 `관련 이슈` 절·제목 형식의 `[#<이슈번호>]`** 를 함께 제거 | `노션 PM Task DB "<DB명>"` |
@@ -103,7 +104,7 @@
 | `{{REPO_WORK_RULES}}` | 리포 고유 작업 규약 — 골격 5항 다음부터 이어 붙인다(6·7…). 없으면 행 제거. **판을 올려 재생성할 때 리포 고유 규약이 유실되지 않게 하는 자리** | — |
 | `{{REPO_DONTS}}` | 리포 고유 '하지 말 것' 불릿 — 없으면 행 제거. 위와 같은 이유로 유지한다 | — |
 | `{{REPO_GLOSSARY_ROWS}}` | 리포 고유 용어 표 행 — 모듈·패키지·경계 등 (생성 시 작성, 없으면 행 제거) | — |
-| `{{CONVENTION_ROWS}}` | INDEX.md 표 행 — 생성한 컨벤션 문서마다 1행 | `\| [git.md](git.md) \| 전역 \| 커밋·게이트·브랜치·PR \|` |
+| `{{CONVENTION_ROWS}}` | INDEX.md 표 행 — 생성한 컨벤션 문서마다 1행. **골격 4종(`git`·`code-style`·`plugins` + 스택마다 1부)은 반드시 등재**한다(고립 문서 금지 — pre-commit ⓒ 검사) | `\| [git.md](git.md) \| 전역 \| 커밋·게이트·브랜치·PR \|` |
 | `{{EDITORCONFIG_STACK_BLOCK}}` | 스택 확장자 대상 들여쓰기·개행 규칙 (스택 선택 — **글롭에 `md`를 넣지 않는다**: 골격 하단 `[*.md]` 절과 겹친다) | `[*.{ts,tsx,json}]` 블록 |
 | `{{GITIGNORE_STACK_BLOCK}}` | 스택 빌드 산출물·의존성 경로 (스택 선택) | `node_modules/`·`dist/` |
 

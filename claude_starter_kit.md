@@ -170,6 +170,8 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
 
 ### §4-M MEMBER-BOOTSTRAP.md — 팀원 개인 셋팅 실행 규약
 
+- **문서로 둔다 — 스킬화하지 않는다.** 온보딩은 1인당 1회이고, **Claude를 켜기 전에 사람이 읽는 첫 접점**이다(리포 페이지에서 바로 보이는 자리). 절차층(`.claude/skills/`)은 반복 실행되는 절차의 자리다.
+- **플러그인 표는 여기 두지 않는다** — 정본은 `docs/conventions/plugins.md` 이고 STEP ② 는 링크만 한다.
 - 실행 주체·질문·STEP 구성: ① 의존성 → ② 플러그인 설치 → ③ 설치 직후 안전 확인 → ④ 개인 설정 → ⑤ 검증 → ⑥ 보고. **STEP ②는 목록만 던지지 말고 각 플러그인이 무엇을 주는지 설명한 뒤 설치 의사를 확인**한다. 역할을 묻지 않는다.
 - **〔신설〕 STEP ④에 세션 규약 안내 포함**: 세션은 리포 루트에서 열기(이유: 프로젝트 설정·훅·rules는 시작 디렉토리 기준 로드) · 세션 이름 지정·재개(`-n`·`--resume`·`--from-pr`) · 병렬은 `--worktree` · 하위 폴더 `/init` 금지.
 - 구조 변경 금지 게이트 유지. 모노레포에 pnpm 패키지가 여럿이면 **STEP ①은 전 패키지 의존성 설치를 포함**한다.
@@ -211,6 +213,7 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
 - **생성 대상 = 내용이 Q&A로 갈리는 문서뿐이다.** 구조·장치·문서 골격은 전부 `templates/` 치환 복사가 담당한다(목록: `templates/README.md` 파일 목록). 공통 생성 대상:
   - `docs/conventions/git.md` — **골격 치환 복사**(`templates/`). **type 표 11종은 고정 — 리포마다 바꾸지 않는다.** 치환 대상은 scope·브랜치 표·게이트 요약·PR 값뿐이다. Q4에 기존 자산이 있으면 scope·브랜치·게이트에 **원문 반영**하되, type 표는 골격을 유지하고 차이를 완료 보고에 적는다
   - `docs/conventions/code-style.md` — 공통 작성 규칙(주석 언어·문서 언어·구역 주석 등)
+  - `docs/conventions/plugins.md` — **골격 치환 복사**. 플러그인·MCP 목록의 정본 — MEMBER-BOOTSTRAP STEP ② 는 이 문서를 링크만 한다(표를 두 곳에 두지 않는다). INDEX.md 등재 필수
   - **관리자가 Q4·Q9로 자료를 준 경우** — 그 자료가 규약이면 `docs/conventions/`에 컨벤션으로 만들어 INDEX 본표에 등재하고, 규약이 아닌 **참고 데이터**(이슈 목록·좌표 스냅샷 등)면 `docs/conventions/`에 두되 INDEX의 **"참고 자료(컨벤션 아님 — 등재만)" 절**로 구분해 등재한다. **킷이 스스로 만들 대상을 정하지 않는다** — 무엇이 필요한지는 관리자가 자료로 지정한다.
   - `.claude/settings.json`의 `allow` 목록에 스택 검증 명령 추가(치환)
   - `docs/conventions/INDEX.md`의 `{{CONVENTION_ROWS}}`·`docs/constitution.md`의 `{{CONSTITUTION_PRINCIPLES}}`·`docs/concepts/glossary.md`의 `{{REPO_GLOSSARY_ROWS}}` 채우기
