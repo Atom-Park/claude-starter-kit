@@ -131,6 +131,7 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
 - **〔신설〕 절차층 배치**: 스킬이 `.claude/skills/<절차>/SKILL.md` 로 존재하고 templates 원문과 치환부 외 일치 · 보호 경로 목록(settings ask·가드·사후 보고 훅·doc-governance)에 `.claude/skills/**` 등재 · 각 SKILL.md 200줄 이하 · 허브 문서 지도에서 링크됨
 - **〔신설〕 강제 장치 실측**: 보호 경로 ask 규칙(Edit 폼)·defaultMode가 settings에 존재 + 가드 차단 실측(화이트리스트 외 `CLAUDE.md` 생성 시도 → PreToolUse 차단 / 커밋 시도 → pre-commit 차단)
 - **〔신설〕 린트 게이트 차단 실측**: 자동수정 불가 위반을 만들어 스테이징하고 pre-commit이 `exit 1`로 차단하는지 확인한다. `exit 0`이면 게이트가 무력한 것이다 — 종료코드 옵션을 고쳐 다시 잰다
+- **〔신설〕 장치 서술 대조**: 문서가 설명하는 게이트 동작이 `.githooks/*` 원문과 일치하는지 확인한다 — 골격 문구를 그대로 옮겨 실제와 어긋나는 일이 잦다
 - **〔신설〕 템플릿 원문 일치**: templates/ ↔ 배치 결과(훅·settings·rules·스킬·PR 템플릿) diff = 치환부 외 0건
 - **생성 흔적 기록** — 지도표 머리말에 `생성: claude-starter-kit v<버전> (<날짜>)` 가 있다
 - **킷 층 최소** — `.claude-starter-kit/` 에 지도표 1파일만 있다(초안 사본·골격 없음)
