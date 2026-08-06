@@ -13,7 +13,7 @@
 3-1. **`docs/` 구조 — 고정과 적응**
    - **고정(이름·위치를 바꾸지 않는다)**: `docs/concepts/` · `docs/conventions/` · `docs/designs/` · `docs/personal/` · `docs/constitution.md`. 특히 **`docs/conventions/INDEX.md`는 `.githooks/pre-commit` ⓒ와 `guard-governance.sh`가 경로를 그대로 검사**하므로 이름을 바꾸면 게이트가 조용히 헛돈다.
    - **적응 허용**: 스택이 둘 이상이면 `docs/conventions/` 아래를 하위 폴더로 분화해도 된다(예: `backend/`·`frontend/`). 등재는 `INDEX.md` 한 곳에 모은다.
-3-2. 골격 안의 `<!-- 생성 안내 ... -->` 주석은 내용을 채운 뒤 **지운다**. **생성기에게 하는 지시는 반드시 이 형식으로만 쓴다** — 본문·인용문에 섞어 두면 삭제 규칙에 걸리지 않아 배포본에 남고, 팀원이 읽는 문서에 "이 절을 제거하라"가 그대로 나간다.
+3-2. 골격 안의 `<!-- 생성 안내 ... -->` 주석은 내용을 채운 뒤 **지운다**. **생성기에게 하는 지시는 반드시 이 형식으로만 쓴다** — HTML 주석을 못 쓰는 형식(`.editorconfig`·`.gitignore`·JSON 등)은 **파일에 지시를 적지 말고 위 치환표에 적는다** — 본문·인용문에 섞어 두면 삭제 규칙에 걸리지 않아 배포본에 남고, 팀원이 읽는 문서에 "이 절을 제거하라"가 그대로 나간다.
 4. `.gitignore`에 `.claude/unattended-edits.log` 를 등재한다(감사 로그 — 커밋 금지).
 5. 훅 활성화: `git config core.hooksPath .githooks` (git pre-commit) · `.claude/settings.json`의 hooks 등록(Claude 훅)은 **다음 세션부터 효력**.
 6. 리포의 `.claude-starter-kit/` 에 **변경 지도표 하나만** 만든다(형식·시드는 생성 규약 §4-G). 머리말에 생성 흔적을 한 줄 적는다 — `> 생성: claude-starter-kit v<플러그인 버전> (<날짜>)`.
@@ -57,7 +57,7 @@
 | `{{SUB_CLAUDE_MD_REGEX}}` | 위 경로의 정규식 이스케이프형 | `ui/CLAUDE\.md` |
 | `{{PKG_MGR}}` | 패키지 매니저 명령 (스택 선택) | `pnpm` |
 | `{{STAGED_SRC_REGEX}}` | pre-commit 린트 대상 파일 정규식 | `^src/.*\.(ts|tsx)$` |
-| `{{LINT_FIX_BLOCK}}` | 자동수정 린트 실행 블록 (스택 선택 — **도구명을 밝히는 echo부터** 자동수정·불가 시 차단까지 한 블록). `{{FORMAT_CMD}}`와 같은 제약: **패키지 루트에서 실행**하고, 스테이징 경로는 리포 루트 기준이므로 접두를 제거해 넘긴다 | — |
+| `{{LINT_FIX_BLOCK}}` | 자동수정 린트 실행 블록 (스택 선택 — **도구명을 밝히는 echo부터** 자동수정·불가 시 차단까지 한 블록). `{{FORMAT_CMD}}`와 같은 제약: **패키지 루트에서 실행**하고, 스테이징 경로는 리포 루트 기준이므로 접두를 제거해 넘긴다. **차단이 실제로 걸리는지 종료코드로 실측한다** — 위반을 warning 등급으로 다루는 린터는 위반이 있어도 `exit 0`이라 게이트가 조용히 통과한다. 그런 도구는 경고를 오류로 올리는 옵션(`--deny-warnings`·`--max-warnings 0` 등)을 블록에 넣는다 | — |
 | `{{FE_SRC_CASE}}` | format-on-edit 대상 case 패턴 | `*/src/*.ts\|*/src/*.tsx` |
 | `{{FORMAT_CMD}}` | 편집 자동수정 명령 (스택 선택) — **린터 바이너리가 해석되는 패키지 루트에서 실행**해야 한다(`(cd "$ROOT/<패키지>" && …)`). 모노레포 루트에서 바로 부르면 조용히 무동작한다 | — |
 | `{{VERIFY_CMDS}}` | PR 검증 명령 나열 | `lint · build` |

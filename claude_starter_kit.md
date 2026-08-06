@@ -22,7 +22,8 @@
 4. **멱등** — 이미 있는 산출물은 덮지 않고 건너뛴 뒤 보고에 명시한다. **그래서 재실행은 기존 리포의 업그레이드 수단이 아니다** — 새 산출물만 만든다(개정 반영 경로는 §3-B).
 5. **산출물 배치(§1)** — 리포 지식은 `docs/`(concepts·conventions·designs·constitution·personal)에, 변경 지도표는 `.claude-starter-kit/`에 둔다. **조직 공통 원칙의 정본은 이 초안 §1이다** — 리포에 요약 사본을 만들지 않는다(만들면 전파 대상이 하나 늘고 곧 어긋난다). Claude에게 자동 주입할 집행 규칙은 `.claude/rules/`에 둔다(§1 규칙 3층). **반복 실행 절차는 `.claude/skills/`에 스킬로 둔다**(호출 시에만 로드 — 상시 컨텍스트를 쓰지 않는다).
 6. **실측 우선** — 도구 동작(훅 차단/자동수정, 템플릿 기본값, 설치 결과)은 문서로 단정하지 말고 **생성 시점에 실측**해 반영한다.
-   (검증된 실측 예: lint-staged `--fix` 훅은 포맷 위반을 **자동 수정 후 통과**시킨다 → 훅 "차단" 검증은 비수정 모드 도구나 자동수정 불가 위반으로 설계할 것.)
+   (검증된 실측 예 ①: lint-staged `--fix` 훅은 포맷 위반을 **자동 수정 후 통과**시킨다 → 훅 "차단" 검증은 비수정 모드 도구나 자동수정 불가 위반으로 설계할 것.)
+   (검증된 실측 예 ②: **린터의 종료코드 기준**을 반드시 잰다 — 위반을 warning 등급으로 다루는 린터는 위반이 있어도 `exit 0`이라 **게이트가 조용히 통과**한다. 자동수정 불가 위반을 실제로 만들어 스테이징하고 `sh .githooks/pre-commit` 이 `exit 1`을 내는지 확인한다. 통과해 버리면 경고를 오류로 올리는 옵션을 블록에 넣는다.)
 7. **지침은 컨텍스트, 강제는 장치** — CLAUDE.md·`.claude/rules/`는 공식적으로 "강제된 구성이 아닌 컨텍스트"다. **지켜져야만 하는 규칙은 반드시 강제 장치와 짝으로 생성**하되, **장치별 유효 범위를 구분해** 짝을 설계한다: 권한 규칙 ask/deny는 **인터랙티브 모드에서 확인을 강제**하고, 무인·자동 승인 모드(`auto`·`dontAsk`·`bypassPermissions`)에서는 프롬프트 없이 자동 처리된다(실측) · PreToolUse 훅은 **권한 모드와 무관하게 실행**되며(서브에이전트 포함) exit 2 차단은 전 모드 유효 — 단 `permissionDecision:"ask"` 확인 강제는 무인 모드에서 자동 승인된다(실측 — 무인 방어는 감사·사후 보고로) · git pre-commit은 세션 밖 편집 포함 전원 적용(최종 안전망). **무인 모드의 보호 경로 방어는 훅·pre-commit 층이 담당한다.**
 
 ## §1. 확정 원칙 (킷이 반드시 담아야 하는 전제)
@@ -129,6 +130,7 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
 - **〔신설〕 규칙 3층 등재**: rules ↔ conventions 짝이 지도표에 등재됨
 - **〔신설〕 절차층 배치**: 스킬이 `.claude/skills/<절차>/SKILL.md` 로 존재하고 templates 원문과 치환부 외 일치 · 보호 경로 목록(settings ask·가드·사후 보고 훅·doc-governance)에 `.claude/skills/**` 등재 · 각 SKILL.md 200줄 이하 · 허브 문서 지도에서 링크됨
 - **〔신설〕 강제 장치 실측**: 보호 경로 ask 규칙(Edit 폼)·defaultMode가 settings에 존재 + 가드 차단 실측(화이트리스트 외 `CLAUDE.md` 생성 시도 → PreToolUse 차단 / 커밋 시도 → pre-commit 차단)
+- **〔신설〕 린트 게이트 차단 실측**: 자동수정 불가 위반을 만들어 스테이징하고 pre-commit이 `exit 1`로 차단하는지 확인한다. `exit 0`이면 게이트가 무력한 것이다 — 종료코드 옵션을 고쳐 다시 잰다
 - **〔신설〕 템플릿 원문 일치**: templates/ ↔ 배치본(훅·settings·rules·스킬·PR 템플릿) diff = 치환부 외 0건
 - **생성 흔적 기록** — 지도표 머리말에 `생성: claude-starter-kit v<버전> (<날짜>)` 가 있다
 - **킷 층 최소** — `.claude-starter-kit/` 에 지도표 1파일만 있다(초안 사본·골격 없음)
@@ -191,7 +193,7 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
   - **pre-commit 거버넌스 3검사** (templates 원문 + 스택 린트 게이트 치환) — ⓐ 새 CLAUDE.md 화이트리스트 검사 ⓑ 인덱스 밖 규약 문서 차단 ⓒ `docs/conventions/` 신규 파일 ↔ INDEX.md 동반 수정 검사
   - **`.claude/skills/change-propagation/SKILL.md`·`.claude/skills/commit-and-pr/SKILL.md`** (templates 원문) — 절차층 기본 2종: 변경 전파(정본→배치본→실물 6단계 · 이 킷의 변경 규약 전부를 담는다)·커밋/PR 실행(`docs/conventions/git.md` 정본 대조 → 게이트 통과 → PR 템플릿 충족). 치환값은 지도표에 등재한다(`{{MAP_TABLE}}`·`{{REPO_PITFALLS}}`·`{{ISSUE_SOURCE}}`·`{{TYPE_SCOPE}}`·`{{PR_SECTIONS}}`·`{{MERGE_COND}}`) — 절차 문구를 다른 문서에 복제하지 않는다. **새 절차가 필요하면 문서를 늘리지 말고 스킬을 추가**하고 보호 경로·허브 문서 지도에 함께 등재한다
   - **(Q10 "있음" 시)** CLAUDE.md 템플릿 첫 줄 `@AGENTS.md` 가져오기 구성
-- 스택별 생성 대상: ① **검증된 조합**(런타임·프레임워크·빌드·린터/포매터·테스트의 버전 표 — `docs/conventions/<스택>.md`에 두며 이 표가 스택 버전의 단일 출처) ② `docs/conventions/<스택>.md` ③ templates 치환자 값 — **린터·포매터 명령 치환자(`{{LINT_FIX_BLOCK}}`·`{{FORMAT_CMD}}`)는 바이너리가 해석되는 패키지 루트에서 실행하도록 채운다**(모노레포 루트에서 바로 부르면 조용히 무동작). 스테이징 경로는 리포 루트 기준이므로 접두를 제거해 넘긴다: `{{PKG_MGR}}`·`{{STAGED_SRC_REGEX}}`·`{{LINT_FIX_BLOCK}}`·`{{FORMAT_CMD}}`·`{{DEP_INSTALL}}`·`{{VERIFY_CMDS}}`·`{{EDITORCONFIG_STACK_BLOCK}}`·`{{GITIGNORE_STACK_BLOCK}}`) + **〔신설〕 경로 범위 규칙 파일** — `.claude/rules/<스택>.md`. frontmatter 형식은 다음으로 고정한다:
+- 스택별 생성 대상: ① **검증된 조합**(런타임·프레임워크·빌드·린터/포매터·테스트의 버전 표 — `docs/conventions/<스택>.md`에 두며 이 표가 스택 버전의 단일 출처) ② `docs/conventions/<스택>.md` ③ templates 치환자 값 — **린터·포매터 명령 치환자(`{{LINT_FIX_BLOCK}}`·`{{FORMAT_CMD}}`)는 바이너리가 해석되는 패키지 루트에서 실행하도록 채운다**(모노레포 루트에서 바로 부르면 조용히 무동작). 스테이징 경로는 리포 루트 기준이므로 접두를 제거해 넘긴다. **게이트가 실제로 차단하는지 종료코드로 확인하고**(§0-6 실측 예 ②), 통과해 버리면 경고를 오류로 올리는 옵션을 넣는다 — **커밋 게이트와 검증 명령(`{{VERIFY_CMDS}}`)의 종료코드 기준을 같게 맞춘다**: `{{PKG_MGR}}`·`{{STAGED_SRC_REGEX}}`·`{{LINT_FIX_BLOCK}}`·`{{FORMAT_CMD}}`·`{{DEP_INSTALL}}`·`{{VERIFY_CMDS}}`·`{{EDITORCONFIG_STACK_BLOCK}}`·`{{GITIGNORE_STACK_BLOCK}}`) + **〔신설〕 경로 범위 규칙 파일** — `.claude/rules/<스택>.md`. frontmatter 형식은 다음으로 고정한다:
     ```
     ---
     paths:
