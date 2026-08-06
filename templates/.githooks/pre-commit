@@ -5,7 +5,7 @@
 # ── 거버넌스 검사 (리포당 1거버넌스·컨벤션 단일 인덱스) ──
 ADDED=$(git diff --cached --name-only --diff-filter=A || true)
 
-# ⓐ 새 CLAUDE.md 화이트리스트 — 허용 위치: 루트 CLAUDE.md · 등록된 서브({{SUB_CLAUDE_MD}}) · 킷 템플릿 골격
+# ⓐ 새 CLAUDE.md 화이트리스트 — 허용 위치: 루트 CLAUDE.md · 등록된 서브({{SUB_CLAUDE_MD}})
 NEW_CLAUDE=$(printf '%s\n' "$ADDED" | grep -E '(^|/)CLAUDE\.md$' | grep -vE '^(CLAUDE\.md|{{SUB_CLAUDE_MD_REGEX}})$' || true)
 if [ -n "$NEW_CLAUDE" ]; then
   echo "[pre-commit] 차단: 화이트리스트 외 CLAUDE.md 신설 — $NEW_CLAUDE" >&2
