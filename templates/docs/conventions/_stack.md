@@ -24,7 +24,7 @@
 
 - 린트 **{{LINTER}}** · 포맷 **{{FORMATTER}}** · 줄 길이 **{{LINE_LENGTH}}**.
 - 줄 길이는 **린터와 포매터에 같은 값**을 넣는다 — 다르면 두 도구가 서로의 결과를 되돌린다.
-- 편집 직후 PostToolUse 훅 `.githooks/format-on-edit.sh` 가 자동수정을 실행하고, 커밋 시 `.githooks/pre-commit` 이 **비수정 모드로 재검사**해 남은 위반을 차단한다.
+- 편집 직후 PostToolUse 훅 `.githooks/format-on-edit.sh` 가 자동수정을 실행하고, 커밋 시 `.githooks/pre-commit` 이 **한 번 더 자동수정을 적용해 재스테이징**하고, **자동수정 불가 위반만** 차단한다.
 - **종료코드 기준**: {{LINT_EXIT_NOTE}}
 
 ## 타입 검사
