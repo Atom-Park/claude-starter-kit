@@ -1,7 +1,7 @@
 {
   "name": "claude-starter-kit",
   "description": "Scaffolds a complete Claude collaboration setup into a repository — hub, conventions, enforcement gates, and team onboarding — from a short Q&A. Generated documentation is in Korean.",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "author": {
     "name": "Atom-Park"
   }

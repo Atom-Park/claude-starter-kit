@@ -9,7 +9,7 @@ case "$SRC" in startup|clear) ;; *) exit 0 ;; esac
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
 
 WARN=0
-echo "[킷 세션 부트스트랩] 이 세션은 스타터킷(.claude-starter-kit) 거버넌스 적용 세션이다."
+echo "[킷 세션 부트스트랩] 이 세션에는 리포 거버넌스가 적용된다 — 허브 CLAUDE.md · .claude/rules · .githooks."
 
 HOOKSPATH=$(git config core.hooksPath 2>/dev/null)
 if [ "$HOOKSPATH" = ".githooks" ]; then
