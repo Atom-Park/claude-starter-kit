@@ -35,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh .githooks/session-bootstrap.sh"
+            "command": "sh \"$CLAUDE_PROJECT_DIR/.githooks/session-bootstrap.sh\""
           }
         ]
       },
@@ -43,7 +43,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh .githooks/list-personal-assets.sh"
+            "command": "sh \"$CLAUDE_PROJECT_DIR/.githooks/list-personal-assets.sh\""
           }
         ]
       }
@@ -54,7 +54,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh .githooks/guard-governance.sh"
+            "command": "sh \"$CLAUDE_PROJECT_DIR/.githooks/guard-governance.sh\""
           }
         ]
       }
@@ -65,11 +65,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh .githooks/format-on-edit.sh"
+            "command": "sh \"$CLAUDE_PROJECT_DIR/.githooks/format-on-edit.sh\""
           },
           {
             "type": "command",
-            "command": "sh .githooks/notify-unattended-edit.sh"
+            "command": "sh \"$CLAUDE_PROJECT_DIR/.githooks/notify-unattended-edit.sh\""
           }
         ]
       }
