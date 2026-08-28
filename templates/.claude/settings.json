@@ -11,6 +11,7 @@
       "Bash({{PKG_MGR}} install:*)"
     ],
     "ask": [
+      "Bash(git commit:*)",
       "Edit(./CLAUDE.md)",
       "Edit(./{{SUB_CLAUDE_MD}})",
       "Edit(./docs/constitution.md)",
@@ -44,6 +45,16 @@
           {
             "type": "command",
             "command": "sh \"$CLAUDE_PROJECT_DIR/.githooks/list-personal-assets.sh\""
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"$CLAUDE_PROJECT_DIR/.githooks/reinject-rules.sh\""
           }
         ]
       }

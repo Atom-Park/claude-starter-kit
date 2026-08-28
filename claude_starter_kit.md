@@ -131,6 +131,8 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
 - **〔신설〕 규칙 3층 등재**: rules ↔ conventions 짝이 지도표에 등재됨
 - **〔신설〕 절차층 배치**: 스킬이 `.claude/skills/<절차>/SKILL.md` 로 존재하고 templates 원문과 치환부 외 일치 · 보호 경로 목록(settings ask·가드·사후 보고 훅·doc-governance)에 `.claude/skills/**` 등재 · 각 SKILL.md 200줄 이하 · 허브 문서 지도에서 링크됨
 - **〔신설〕 강제 장치 실측**: 보호 경로 ask 규칙(Edit 폼)·defaultMode가 settings에 존재 + 가드 차단 실측(화이트리스트 외 `CLAUDE.md` 생성 시도 → PreToolUse 차단 / 커밋 시도 → pre-commit 차단)
+- **〔신설〕 보호 브랜치 가드 실측**: `{{PROTECTED_BRANCHES}}` 가 비어 있지 않으면 그 브랜치에서 커밋을 시도해 `exit 1` 로 막히는지, 작업 브랜치에서는 통과하는지 잰다. **값이 `{{BRANCH_ROWS}}` 의 보호 브랜치와 일치**해야 한다 — 문서와 장치가 갈리면 안 된다. 값이 비면 가드가 꺼지는 것이 정상이고, 그 사실을 완료 보고에 적는다
+- **〔신설〕 규약 재주입 동작**: `UserPromptSubmit` 에 `reinject-rules.sh` 가 등록되고 실행 권한이 있는지. 임계값 미달이면 **침묵**하고 넘기면 `CLAUDE.md`+`.claude/rules/*` **원본**을 내는지(요약·사본이 아니다). `transcript_path` 가 없는 입력에서도 조용히 통과하는지
 - **〔신설〕 린트 게이트 차단 실측**: 자동수정 불가 위반을 만들어 스테이징하고 pre-commit이 `exit 1`로 차단하는지 확인한다. `exit 0`이면 게이트가 무력한 것이다 — 종료코드 옵션을 고쳐 다시 잰다
 - **〔신설〕 장치 서술 대조**: 문서가 설명하는 게이트 동작이 `.githooks/*` 원문과 일치하는지 확인한다 — 골격 문구를 그대로 옮겨 실제와 어긋나는 일이 잦다
 - **〔신설〕 템플릿 원문 일치**: templates/ ↔ 배치 결과(훅·settings·rules·스킬·PR 템플릿) diff = 치환부 외 0건
@@ -143,7 +145,7 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
 
 - 초안 STEP 4에서 같은 실행 안에서 즉시 수행. 입력은 1차 질문에서 확보 — 추가 질문 없음. Q9 자료 반영 규칙 동일.
 - 행동 규칙: 해석 금지·복사 원칙 / 치환표 / 단계 검증(재시도 3회→보류) / 멱등 / 폐쇄망 대응
-- 절차: 워크스페이스 생성 → `git init -b main` 최우선 → **templates/ 치환 복사**(훅·settings·doc-governance 규칙·**스킬 골격**·PR 템플릿·허브/부트스트랩 골격 — 치환표는 templates/README) → 문맥 의존 문서 생성(§4 — 컨벤션·MEMBER-BOOTSTRAP·**`.claude/rules/` 규칙 파일**·**`.claude/skills/` 치환값**) → 도구 설치·훅(**PreToolUse 가드·SessionStart 부트스트랩 등록** 포함) → **지도표 초기본 생성**(`.claude-starter-kit/propagation-map-<리포>.md` — 형식·시드는 §4-G) → CLAUDE.md·constitution 치환 → 최종 검증 → main 첫 커밋 → **게이트 차단 검증**(린트 훅 + 거버넌스 가드 — §0-6 실측 원칙 준수)
+- 절차: 워크스페이스 생성 → `git init -b main` 최우선 → **templates/ 치환 복사**(훅·settings·doc-governance 규칙·**스킬 골격**·PR 템플릿·허브/부트스트랩 골격 — 치환표는 templates/README) → 문맥 의존 문서 생성(§4 — 컨벤션·MEMBER-BOOTSTRAP·**`.claude/rules/` 규칙 파일**·**`.claude/skills/` 치환값**) → 도구 설치·훅(**PreToolUse 가드·SessionStart 부트스트랩·UserPromptSubmit 규약 재주입 등록** 포함) → **지도표 초기본 생성**(`.claude-starter-kit/propagation-map-<리포>.md` — 형식·시드는 §4-G) → CLAUDE.md·constitution 치환 → 최종 검증 → main 첫 커밋 → **게이트 차단 검증**(린트 훅 + 거버넌스 가드 — §0-6 실측 원칙 준수)
 
 ### §4-G 변경전파 지도표 — 형식·최초 생성·유지
 
@@ -166,7 +168,7 @@ STEP 6  완료 보고 — 생성 목록 · 검증 결과 · 기본값 적용 항
 - **최초 생성 — 시드 3종**으로 초기 행을 뽑는다:
   1. **치환표 시드** — `templates/README.md` 치환표의 placeholder 전 행. placeholder = 킷이 스스로 선언한 "여러 곳에 퍼지는 사실"이므로 그대로 지도표 후보다. 각 placeholder의 현재 값으로 검색해 참조층·집행층·실물 위치를 채운다.
   2. **협의 표시 시드** — 산출물에서 "협의 필요"·"협의 중"·"미확정" 표시가 붙은 항목. 가장 먼저 바뀔 값들이므로 † 를 달아 등재한다.
-  3. **유형 체크리스트 시드** — 포트 · URL/경로 규약 · 패키지/네임스페이스 · 외부 의존성 좌표·버전 · 커밋/PR 규약 · 플러그인 목록 · 스택·버전 · 기동/테스트 명령 · **Claude 규칙 파일(rules ↔ conventions 짝)** · **스킬층** · 보호 경로 목록 · 기본 권한 모드(defaultMode)
+  3. **유형 체크리스트 시드** — 포트 · URL/경로 규약 · 패키지/네임스페이스 · 외부 의존성 좌표·버전 · 커밋/PR 규약 · 플러그인 목록 · 스택·버전 · 기동/테스트 명령 · **Claude 규칙 파일(rules ↔ conventions 짝)** · **스킬층** · 보호 경로 목록 · 기본 권한 모드(defaultMode) · **규약 재주입(컨텍스트 밀림 방어 — 훅 등록·임계값)**
 - **유지**: 전파 중 지도표에 없던 사실을 고쳤으면 행을 추가하고, 등재됐지만 실제와 다른 위치(문서 이동·삭제)를 발견하면 그 자리에서 바로잡는다. 유지비용은 실행에 내장 — 별도 관리 작업을 두지 않는다.
 
 ### §4-M MEMBER-BOOTSTRAP.md — 팀원 개인 셋팅 실행 규약

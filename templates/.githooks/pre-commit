@@ -2,6 +2,25 @@
 # pre-commit 게이트 — ① 거버넌스 검사(구조 위반은 차단) ② 린트(자동수정 후 통과, 못 고치는 것만 차단)
 # 활성화: git config core.hooksPath .githooks (MEMBER-BOOTSTRAP STEP ④)
 
+# ── 보호 브랜치 가드 ──
+# 「보호 브랜치 직접 커밋 금지」가 문서(git.md·commit-and-pr)로만 있으면 세션이 길어질 때 뚫린다.
+# 문서는 컨텍스트에서 밀리고 훅은 밀리지 않는다.
+# 값이 비면 가드가 꺼진다 — 보호 브랜치 개념이 없는 리포도 그대로 쓸 수 있다.
+PROTECTED_BRANCHES="{{PROTECTED_BRANCHES}}"
+# 최초 커밋(루트)은 통과시킨다 — 리포 생성이 기준 브랜치에 첫 커밋을 만들어야 하기 때문이다.
+# HEAD 가 없을 때 rev-parse 가 실패하는 것에 기대지 않고 조건을 명시한다.
+if git rev-parse --verify HEAD >/dev/null 2>&1; then
+  # detached HEAD 는 symbolic-ref 가 비워 준다 — 보호 브랜치가 아니므로 막지 않는다.
+  BRANCH=$(git symbolic-ref --short -q HEAD || echo '')
+  for b in $PROTECTED_BRANCHES; do
+    [ "$BRANCH" = "$b" ] || continue
+    echo "[pre-commit] 차단: '$BRANCH' 직접 커밋 금지" >&2
+    echo "  작업 브랜치에서 커밋하고 PR로 올린다 (docs/conventions/git.md)" >&2
+    echo "  잘못 커밋했다면: git branch <새이름> HEAD && git reset --hard origin/$BRANCH" >&2
+    exit 1
+  done
+fi
+
 # ── 거버넌스 검사 (리포당 1거버넌스·컨벤션 단일 인덱스) ──
 ADDED=$(git diff --cached --name-only --diff-filter=A || true)
 
