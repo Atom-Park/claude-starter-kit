@@ -21,15 +21,13 @@ BYTES=${REINJECT_BYTES:-500000}      # transcript 증가 500KB 마다
 MIN_TURNS=${REINJECT_MIN_TURNS:-3}   # 도구 폭주 구간에서 매 지시마다 뜨지 않게
 MAX_TURNS=${REINJECT_MAX_TURNS:-15}  # 바이트가 안 차도 대화가 길면 한 번
 
+# 값 추출은 공용 파서가 맡는다 — jq 가 없어도 동작해야 한다(팀원 환경 가정 최소화).
+. "$(dirname "$0")/hook-json.sh"
+
 INPUT=$(cat 2>/dev/null || true)
 
-# 훅 입력(JSON)에서 값 추출 — jq 없이도 동작해야 한다(팀원 환경 가정 최소화).
-field() {
-  printf '%s' "$INPUT" | sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"\([^\"]*\)\".*/\1/p" | head -1
-}
-
-SESSION=$(field session_id)
-TRANSCRIPT=$(field transcript_path)
+SESSION=$(hook_field "$INPUT" '.session_id' 'session_id')
+TRANSCRIPT=$(hook_field "$INPUT" '.transcript_path' 'transcript_path')
 [ -n "$SESSION" ] || SESSION="unknown"
 
 STATE_DIR="${TMPDIR:-/tmp}/claude-reinject-$(id -u)"
