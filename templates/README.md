@@ -24,6 +24,7 @@
 |---|---|---|
 | `.githooks/pre-commit` | 동일 | 커밋 게이트 — 거버넌스 3검사(불변) + 린트 게이트(치환) |
 | `.githooks/protected-paths.sh` | 동일 | **보호 경로 단일 출처** — `is_protected_path()`, 아래 두 훅이 source |
+| `.githooks/hook-json.sh` | 동일 | **훅 입력 JSON 파서 단일 출처** — `hook_field()`, 아래 다섯 훅이 source. jq 가 있으면 jq, 없으면 grep/sed 폴백 |
 | `.githooks/guard-governance.sh` | 동일 | PreToolUse — 신설 차단(exit 2) + 무인 모드 보호 경로 감사 기록 |
 | `.githooks/session-bootstrap.sh` | 동일 | SessionStart(startup·clear) — 킷 세션 식별·자가 점검 주입 |
 | `.githooks/notify-unattended-edit.sh` | 동일 | PostToolUse — 무인 모드 보호 경로 수정 사후 보고 의무 |
