@@ -5,15 +5,16 @@
 #    (훅의 확인 강제〔permissionDecision:"ask"〕도 무인 모드에선 자동 승인됨을 실측 — 확인 대신 감사·보고로 방어)
 # 유인 모드의 편집 확인은 settings.json permissions.ask 가 담당(계층 분리).
 . "$(dirname "$0")/protected-paths.sh"   # is_protected_path() — 보호 경로 단일 출처
-. "$(dirname "$0")/hook-json.sh"         # hook_field() — jq→폴백. jq 부재로 조용히 죽지 않는다
+. "$(dirname "$0")/hook-json.sh"         # hook_field()/hook_path() — jq→폴백 + 경로 정규화
 INPUT=$(cat 2>/dev/null)
-FILE=$(hook_field "$INPUT" '.tool_input.file_path' 'file_path')
+FILE=$(hook_path "$INPUT" '.tool_input.file_path' 'file_path')
 MODE=$(hook_field "$INPUT" '.permission_mode' 'permission_mode')
 [ -n "$MODE" ] || MODE=unknown
 [ -z "$FILE" ] && exit 0
 
 # 리포 밖 경로는 이 가드의 대상이 아니다
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+ROOT=$(normalize_hook_path "$ROOT")
 case "$FILE" in
   "$ROOT"/*) REL=${FILE#"$ROOT"/} ;;
   *) exit 0 ;;

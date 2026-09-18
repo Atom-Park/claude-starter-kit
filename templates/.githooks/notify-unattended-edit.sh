@@ -2,13 +2,14 @@
 # Claude Code PostToolUse 훅 — 무인·자동 승인 모드의 보호 경로 수정 사후 보고 의무
 # 수정은 이미 실행된 뒤다(PostToolUse) — exit 2의 stderr가 Claude에게 피드백으로 전달된다. 짝: guard-governance.sh(감사 기록).
 . "$(dirname "$0")/protected-paths.sh"   # is_protected_path() — 보호 경로 단일 출처
-. "$(dirname "$0")/hook-json.sh"         # hook_field() — jq→폴백. jq 부재로 조용히 죽지 않는다
+. "$(dirname "$0")/hook-json.sh"         # hook_field()/hook_path() — jq→폴백 + 경로 정규화
 INPUT=$(cat 2>/dev/null)
-FILE=$(hook_field "$INPUT" '.tool_input.file_path' 'file_path')
+FILE=$(hook_path "$INPUT" '.tool_input.file_path' 'file_path')
 MODE=$(hook_field "$INPUT" '.permission_mode' 'permission_mode')
 [ -n "$MODE" ] || MODE=unknown
 [ -z "$FILE" ] && exit 0
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+ROOT=$(normalize_hook_path "$ROOT")
 case "$FILE" in
   "$ROOT"/*) REL=${FILE#"$ROOT"/} ;;
   *) exit 0 ;;

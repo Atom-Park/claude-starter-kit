@@ -27,7 +27,7 @@ MAX_TURNS=${REINJECT_MAX_TURNS:-15}  # 바이트가 안 차도 대화가 길면 
 INPUT=$(cat 2>/dev/null || true)
 
 SESSION=$(hook_field "$INPUT" '.session_id' 'session_id')
-TRANSCRIPT=$(hook_field "$INPUT" '.transcript_path' 'transcript_path')
+TRANSCRIPT=$(hook_path "$INPUT" '.transcript_path' 'transcript_path')
 [ -n "$SESSION" ] || SESSION="unknown"
 
 STATE_DIR="${TMPDIR:-/tmp}/claude-reinject-$(id -u)"
