@@ -24,12 +24,14 @@
 |---|---|---|
 | `.githooks/pre-commit` | 동일 | 커밋 게이트 — 거버넌스 3검사(불변) + 린트 게이트(치환) |
 | `.githooks/protected-paths.sh` | 동일 | **보호 경로 단일 출처** — `is_protected_path()`, 아래 두 훅이 source |
-| `.githooks/hook-json.sh` | 동일 | **훅 입력 JSON 파서 단일 출처** — `hook_field()`, 아래 다섯 훅이 source. jq 가 있으면 jq, 없으면 grep/sed 폴백 |
+| `.githooks/hook-json.sh` | 동일 | **훅 입력 JSON 파서 단일 출처** — `hook_field()`·`hook_path()`, 아래 다섯 훅이 source. jq 가 있으면 jq, 없으면 grep/sed 폴백. 경로형 필드(`file_path`·`transcript_path`)는 `hook_path()` 로 읽어 Windows 역슬래시를 정규화한다 |
 | `.githooks/guard-governance.sh` | 동일 | PreToolUse — 신설 차단(exit 2) + 무인 모드 보호 경로 감사 기록 |
 | `.githooks/session-bootstrap.sh` | 동일 | SessionStart(startup·clear) — 킷 세션 식별·자가 점검 주입 |
 | `.githooks/notify-unattended-edit.sh` | 동일 | PostToolUse — 무인 모드 보호 경로 수정 사후 보고 의무 |
 | `.githooks/format-on-edit.sh` | 동일 | PostToolUse — 소스 편집 자동 포맷(스택 치환) |
+| `.githooks/reinject-rules.sh` | 동일 | UserPromptSubmit — 컨텍스트 증가량 기준 규약 재주입(불변) |
 | `.githooks/list-personal-assets.sh` | 동일 | SessionStart — docs/personal 목록 주입(불변) |
+| `.githooks/tests/hook-path-test.sh` | 동일 | 경로 정규화 회귀 테스트 — 스택·플랫폼 무관, `sh .githooks/tests/hook-path-test.sh` |
 | `.claude/settings.json` | 동일 | defaultMode·보호 경로 ask(Edit 폼)·deny·훅 등록 골격 |
 | `.claude/rules/doc-governance.md` | 동일 | 무조건 로드 규칙(문서 거버넌스 집행 요약) |
 | `.claude/rules/_stack.md` | `.claude/rules/<스택 슬러그>.md` | **스택마다 1부** — 스택 컨벤션 집행 요약(`paths` 범위 로드). 슬러그는 위 컨벤션 문서와 일치 |
